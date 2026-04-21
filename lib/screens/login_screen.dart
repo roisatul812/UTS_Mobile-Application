@@ -16,8 +16,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -25,28 +27,45 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   "Sign in",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Text(
+                Text(
                   "Login to your account",
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(
+                    color: isDark
+                        ? Colors.grey.shade400
+                        : Colors.grey.shade600,
+                  ),
                 ),
                 const SizedBox(height: 30),
 
-                // Email
+                // EMAIL
                 TextField(
                   controller: emailController,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                   decoration: InputDecoration(
                     hintText: "Email",
+                    hintStyle: TextStyle(
+                      color: isDark
+                          ? Colors.grey.shade400
+                          : Colors.grey.shade600,
+                    ),
                     filled: true,
-                    fillColor: Colors.white,
-                    prefixIcon: const Icon(Icons.email),
+                    fillColor: Theme.of(context).cardColor,
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color:
+                          isDark ? Colors.grey : Colors.black54,
+                    ),
                     contentPadding:
                         const EdgeInsets.symmetric(vertical: 16),
                     border: OutlineInputBorder(
@@ -58,22 +77,35 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 15),
 
-                // Password
+                // PASSWORD
                 TextField(
                   controller: passwordController,
                   obscureText: isHidden,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                   decoration: InputDecoration(
                     hintText: "Password",
+                    hintStyle: TextStyle(
+                      color: isDark
+                          ? Colors.grey.shade400
+                          : Colors.grey.shade600,
+                    ),
                     filled: true,
-                    fillColor: Colors.white,
-                    prefixIcon: const Icon(Icons.lock),
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 16),
+                    fillColor: Theme.of(context).cardColor,
+                    prefixIcon: Icon(
+                      Icons.lock,
+                      color:
+                          isDark ? Colors.grey : Colors.black54,
+                    ),
                     suffixIcon: IconButton(
                       icon: Icon(
                         isHidden
                             ? Icons.visibility
                             : Icons.visibility_off,
+                        color: isDark
+                            ? Colors.grey
+                            : Colors.black54,
                       ),
                       onPressed: () {
                         setState(() {
@@ -81,6 +113,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         });
                       },
                     ),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 16),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -90,26 +124,35 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 10),
 
-                const Align(
+                Align(
                   alignment: Alignment.centerRight,
                   child: Text(
                     "Forgot password?",
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(
+                      color: isDark
+                          ? Colors.grey.shade400
+                          : Colors.grey.shade600,
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 30),
 
-                // Login Button
+                // LOGIN BUTTON
                 Center(
                   child: SizedBox(
                     width: 260,
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1C1C1E),
+                        backgroundColor: isDark
+                            ? Colors.white
+                            : const Color(0xFF1C1C1E),
+                        foregroundColor:
+                            isDark ? Colors.black : Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius:
+                              BorderRadius.circular(25),
                         ),
                       ),
                       onPressed: () {
@@ -139,7 +182,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 Center(
                   child: TextButton(
                     onPressed: () {},
-                    child: const Text("Create new account"),
+                    child: Text(
+                      "Create new account",
+                      style: TextStyle(
+                        color: isDark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade700,
+                      ),
+                    ),
                   ),
                 ),
               ],
