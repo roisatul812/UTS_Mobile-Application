@@ -16,11 +16,13 @@ class TicketDetailScreen extends StatefulWidget {
 
 class _TicketDetailScreenState extends State<TicketDetailScreen> {
   late String status;
+  late String assignedTo;
 
   @override
   void initState() {
     super.initState();
     status = widget.ticket["status"] ?? "Open";
+    assignedTo = widget.ticket["assignedTo"] ?? "-";
   }
 
   Color getStatusColor(String status) {
@@ -36,11 +38,16 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
     }
   }
 
-  void updateStatus() {
+  void updateTicket() {
     final updatedTicket = {
       ...widget.ticket,
       "status": status,
+      "assignedTo": assignedTo,
     };
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Tiket berhasil diperbarui")),
+    );
 
     Navigator.pop(context, updatedTicket);
   }
@@ -56,9 +63,9 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
-            // TITLE
             Text(
               widget.ticket["title"] ?? "-",
               style: const TextStyle(
@@ -69,7 +76,6 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
 
             const SizedBox(height: 10),
 
-            // DATE + PRIORITY
             Text(
               "${widget.ticket["date"]} • ${widget.ticket["priority"]}",
               style: TextStyle(
@@ -81,7 +87,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
 
             const SizedBox(height: 15),
 
-            // STATUS BADGE
+            // STATUS
             Container(
               padding: const EdgeInsets.symmetric(
                   horizontal: 12, vertical: 6),
@@ -101,11 +107,11 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
 
             const SizedBox(height: 25),
 
-            // DESKRIPSI
             const Text(
               "Deskripsi",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
+
             const SizedBox(height: 8),
 
             Container(
@@ -118,12 +124,6 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
               child: Text(
                 widget.ticket["description"] ??
                     "Tidak ada deskripsi",
-                style: TextStyle(
-                  color: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.color,
-                ),
               ),
             ),
 
@@ -135,6 +135,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                 "Update Status",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
+
               const SizedBox(height: 8),
 
               DropdownButtonFormField<String>(
@@ -161,13 +162,54 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                 ),
               ),
 
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
+
+              const Text(
+                "Assign To",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+
+              const SizedBox(height: 8),
+
+              DropdownButtonFormField<String>(
+                value: assignedTo == "-" ? null : assignedTo,
+                hint: const Text("Pilih user"),
+                items: ["Budi", "Siti", "Andi"]
+                    .map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    assignedTo = value!;
+                  });
+                },
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Theme.of(context).cardColor,
+                  border: OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
 
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: updateStatus,
-                  child: const Text("Update Status"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDark
+                        ? Colors.white
+                        : Colors.black,
+                    foregroundColor:
+                        isDark ? Colors.black : Colors.white,
+                  ),
+                  onPressed: updateTicket,
+                  child: const Text("Simpan Perubahan"),
                 ),
               ),
             ],

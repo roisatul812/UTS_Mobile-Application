@@ -71,9 +71,23 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 15),
 
             if (role == "admin") ...[
-              menuButton(context, "Manage Tiket", () {}),
+              menuButton(context, "Manage Tiket", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TicketListScreen(role: role),
+                  ),
+                );
+              }),
               const SizedBox(height: 10),
-              menuButton(context, "Assign Tiket", () {}),
+              menuButton(context, "Assign Tiket", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TicketListScreen(role: role, isAssignMode: true),
+                  ),
+                );
+              }),
             ] else ...[
               menuButton(context, "List Tiket", () {
                 Navigator.push(

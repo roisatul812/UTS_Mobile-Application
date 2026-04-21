@@ -3,8 +3,13 @@ import 'ticket_detail_screen.dart';
 
 class TicketListScreen extends StatefulWidget {
   final String role;
+  final bool isAssignMode;
 
-  const TicketListScreen({super.key, required this.role});
+  const TicketListScreen({
+    super.key,
+    required this.role,
+    this.isAssignMode = false,
+  });
 
   @override
   State<TicketListScreen> createState() => _TicketListScreenState();
@@ -17,16 +22,36 @@ class _TicketListScreenState extends State<TicketListScreen> {
       "status": "Open",
       "date": "21 Apr 2026",
       "priority": "High",
-      "description": "User tidak bisa login ke sistem"
+      "description": "User tidak bisa login ke sistem",
+      "assignedTo": "-"
     },
     {
       "title": "Aplikasi crash",
       "status": "Progress",
       "date": "20 Apr 2026",
       "priority": "Medium",
-      "description": "Aplikasi tiba-tiba crash"
+      "description": "Aplikasi tiba-tiba crash",
+      "assignedTo": "Budi"
+    },
+    {
+      "title": "Tampilan tidak rapi",
+      "status": "Done",
+      "date": "19 Apr 2026",
+      "priority": "Low",
+      "description": "UI berantakan di halaman dashboard",
+      "assignedTo": "-"
     },
   ];
+
+  // FILTER UNTUK ASSIGN MODE
+  List<Map<String, String>> get filteredTickets {
+    if (widget.isAssignMode) {
+      return tickets
+          .where((t) => t["assignedTo"] == "-")
+          .toList();
+    }
+    return tickets;
+  }
 
   Color getStatusColor(String status) {
     switch (status) {
@@ -47,14 +72,19 @@ class _TicketListScreenState extends State<TicketListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text("List Tiket (${widget.role.toUpperCase()})"),
+        title: Text(
+          widget.isAssignMode
+              ? "Assign Tiket (ADMIN)"
+              : widget.role == "admin"
+                  ? "Manage Tiket (ADMIN)"
+                  : "List Tiket",
+        ),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(15),
-        itemCount: tickets.length,
+        itemCount: filteredTickets.length,
         itemBuilder: (context, index) {
-          final ticket = tickets[index];
+          final ticket = filteredTickets[index];
 
           return InkWell(
             borderRadius: BorderRadius.circular(12),
@@ -62,8 +92,7 @@ class _TicketListScreenState extends State<TicketListScreen> {
               final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      TicketDetailScreen(
+                  builder: (context) => TicketDetailScreen(
                     ticket: ticket,
                     role: widget.role,
                   ),
@@ -72,8 +101,14 @@ class _TicketListScreenState extends State<TicketListScreen> {
 
               if (result != null) {
                 setState(() {
-                  tickets[index] =
-                      Map<String, String>.from(result);
+                  final originalIndex = tickets.indexWhere(
+                    (t) => t["title"] == ticket["title"],
+                  );
+
+                  if (originalIndex != -1) {
+                    tickets[originalIndex] =
+                        Map<String, String>.from(result);
+                  }
                 });
               }
             },
@@ -85,9 +120,9 @@ class _TicketListScreenState extends State<TicketListScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // TITLE
                   Text(
                     ticket["title"]!,
                     style: TextStyle(
@@ -99,7 +134,10 @@ class _TicketListScreenState extends State<TicketListScreen> {
                           ?.color,
                     ),
                   ),
+
                   const SizedBox(height: 6),
+
+                  // DATE + PRIORITY
                   Text(
                     "${ticket["date"]} • ${ticket["priority"]}",
                     style: TextStyle(
@@ -109,8 +147,10 @@ class _TicketListScreenState extends State<TicketListScreen> {
                           : Colors.grey.shade600,
                     ),
                   ),
+
                   const SizedBox(height: 10),
 
+                  // STATUS BADGE
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 5),
@@ -130,6 +170,30 @@ class _TicketListScreenState extends State<TicketListScreen> {
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
                       ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  // ASSIGNED INFO
+                  Text(
+                    "Assigned to: ${ticket["assignedTo"]}",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  // INFO TEXT
+                  Text(
+                    widget.isAssignMode
+                        ? "Tap untuk assign tiket"
+                        : "Tap untuk mengelola tiket",
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey.shade500,
                     ),
                   ),
                 ],
