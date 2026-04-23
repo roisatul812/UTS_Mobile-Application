@@ -14,14 +14,6 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Dashboard (${role.toUpperCase()})"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.dark_mode),
-            onPressed: () {
-              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-            },
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -84,7 +76,8 @@ class DashboardScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TicketListScreen(role: role, isAssignMode: true),
+                    builder: (context) =>
+                        TicketListScreen(role: role),
                   ),
                 );
               }),
@@ -116,30 +109,19 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget statCard(BuildContext context, String title, String value) {
-    return Container(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            title,
-            style: TextStyle(
-              color: Theme.of(context).textTheme.bodyMedium?.color,
-            ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(title),
+          ],
+        ),
       ),
     );
   }

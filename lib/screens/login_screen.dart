@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dashboard_screen.dart';
+import 'main_navigation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,7 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor:
+          isDark ? const Color(0xFF121212) : const Color(0xFFF5F5F5),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -50,24 +51,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextField(
                   controller: emailController,
                   style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+                      color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
                     hintText: "Email",
                     hintStyle: TextStyle(
-                      color: isDark
-                          ? Colors.grey.shade400
-                          : Colors.grey.shade600,
-                    ),
+                        color: isDark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade600),
                     filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    prefixIcon: Icon(
-                      Icons.email,
-                      color:
-                          isDark ? Colors.grey : Colors.black54,
-                    ),
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 16),
+                    fillColor: isDark
+                        ? const Color(0xFF1E1E1E)
+                        : Colors.white,
+                    prefixIcon: Icon(Icons.email,
+                        color: isDark ? Colors.white : Colors.black),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -82,30 +78,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: passwordController,
                   obscureText: isHidden,
                   style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+                      color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
                     hintText: "Password",
                     hintStyle: TextStyle(
-                      color: isDark
-                          ? Colors.grey.shade400
-                          : Colors.grey.shade600,
-                    ),
+                        color: isDark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade600),
                     filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    prefixIcon: Icon(
-                      Icons.lock,
-                      color:
-                          isDark ? Colors.grey : Colors.black54,
-                    ),
+                    fillColor: isDark
+                        ? const Color(0xFF1E1E1E)
+                        : Colors.white,
+                    prefixIcon: Icon(Icons.lock,
+                        color: isDark ? Colors.white : Colors.black),
                     suffixIcon: IconButton(
                       icon: Icon(
                         isHidden
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: isDark
-                            ? Colors.grey
-                            : Colors.black54,
+                        color:
+                            isDark ? Colors.white : Colors.black,
                       ),
                       onPressed: () {
                         setState(() {
@@ -113,25 +105,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         });
                       },
                     ),
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 16),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    "Forgot password?",
-                    style: TextStyle(
-                      color: isDark
-                          ? Colors.grey.shade400
-                          : Colors.grey.shade600,
                     ),
                   ),
                 ),
@@ -161,34 +137,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ? "admin"
                                 : "user";
 
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DashboardScreen(role: role),
+                            builder: (context) => MainNavigation(
+                              role: role,
+                              email: emailController.text,
+                            ),
                           ),
                         );
                       },
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                Center(
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Create new account",
-                      style: TextStyle(
-                        color: isDark
-                            ? Colors.grey.shade400
-                            : Colors.grey.shade700,
-                      ),
+                      child: const Text("Login"),
                     ),
                   ),
                 ),
